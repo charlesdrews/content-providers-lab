@@ -30,6 +30,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
   private Button deleteEvent;
   private ListView lv;
   private long recentlyAddedEventId;
+  private long updatedEventID;
 
   public static final String[] EVENT_PROJECTION = new String[] {
           CalendarContract.Calendars._ID,                           // 0
@@ -180,6 +181,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
   public void update() {
     //TODO: Using the number eventID from the method insertEventInCalendar(), update the event
     // that was added in that method
+    updatedEventID = 1;
+    ContentResolver cr = getContentResolver();
+    ContentValues values = new ContentValues();
+    Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, updatedEventID);
+    int rows = getContentResolver().update(updateUri, values, null, null);
+    Log.i(TAG, "Rows updated: "+ rows);
+    fetchEvents();
 
   }
 
