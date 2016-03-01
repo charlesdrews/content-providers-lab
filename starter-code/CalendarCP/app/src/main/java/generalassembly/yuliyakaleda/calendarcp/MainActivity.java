@@ -30,7 +30,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
   private Button deleteEvent;
   private ListView lv;
   private long recentlyAddedEventId;
-  private long updatedEventID;
 
   public static final String[] EVENT_PROJECTION = new String[] {
           CalendarContract.Calendars._ID,                           // 0
@@ -124,8 +123,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     values.put(CalendarContract.Events.DTEND, endMillis);
     values.put(CalendarContract.Events.TITLE, title);
     values.put(CalendarContract.Events.DESCRIPTION, description);
-    values.put(CalendarContract.Events.CALENDAR_ID, 1);
     values.put(CalendarContract.Events.EVENT_LOCATION, location);
+    values.put(CalendarContract.Events.CALENDAR_ID, 1);
     values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());
     Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
 
@@ -178,13 +177,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
     lv.setAdapter(listAdapter);
   }
 
-  public void update() {
+  public void update(String title, String description, String location) {
     //TODO: Using the number eventID from the method insertEventInCalendar(), update the event
     // that was added in that method
-    updatedEventID = 1;
     ContentResolver cr = getContentResolver();
     ContentValues values = new ContentValues();
-    Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, updatedEventID);
+    values.put(CalendarContract.Events.TITLE, title);
+    values.put(CalendarContract.Events.DESCRIPTION, description);
+    values.put(CalendarContract.Events.EVENT_LOCATION, location);
+    Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, recentlyAddedEventId);
     int rows = getContentResolver().update(updateUri, values, null, null);
     Log.i(TAG, "Rows updated: "+ rows);
     fetchEvents();
@@ -205,18 +206,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
   @Override
   public void onClick(View v) {
+    String titleString = title.getText().toString();
+    String descriptionString = description.getText().toString();
+    String locationString = location.getText().toString();
+
     switch (v.getId()) {
       case R.id.add_event:
-        String titleString = title.getText().toString();
-        String descriptionString = description.getText().toString();
-        String locationString = location.getText().toString();
         insertEventInCalendar(titleString, descriptionString, locationString);
         break;
       case R.id.delete_event:
         delete();
         break;
       case R.id.update_event:
-        update();
+        update(titleString, descriptionString, locationString);
         break;
       case R.id.get_events:
         fetchEvents();
