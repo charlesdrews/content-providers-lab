@@ -31,6 +31,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
   private ListView lv;
   private long recentlyAddedEventId;
 
+  public static final String[] EVENT_PROJECTION = new String[] {
+          CalendarContract.Calendars._ID,                           // 0
+          CalendarContract.Calendars.ACCOUNT_NAME,                  // 1
+          CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,         // 2
+          CalendarContract.Calendars.OWNER_ACCOUNT                  // 3
+  };
+
+  // The indices for the projection array above.
+  private static final int PROJECTION_ID_INDEX = 0;
+  private static final int PROJECTION_ACCOUNT_NAME_INDEX = 1;
+  private static final int PROJECTION_DISPLAY_NAME_INDEX = 2;
+  private static final int PROJECTION_OWNER_ACCOUNT_INDEX = 3;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -126,21 +139,41 @@ public class MainActivity extends Activity implements View.OnClickListener {
   public void fetchEvents() {
   //TODO:
   // 1. get 2 calendar instances: startTime (Feb 29) and endTime (March 4) in milliseconds
+    Calendar startTime = Calendar.getInstance();
+    startTime.set(2016, 2, 29, 12, 0, 0);
+    long startMillis = startTime.getTimeInMillis();
+
+    Calendar endTime = Calendar.getInstance();
+    endTime.set(2016, 3, 4, 12, 0, 0);
+    long endMillis = endTime.getTimeInMillis();
+
   // 2. set the limit of 100 events and order DESC
+
   // 3. get all the events within that period using a cursor object
+    Cursor cursor;
+    ContentResolver cr = getContentResolver();
+    Uri uri = CalendarContract.Calendars.CONTENT_URI;
+    String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
+            + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?) AND ("
+            + CalendarContract.Calendars.OWNER_ACCOUNT + " = ?))";
+    String[] selectionArgs = new String[] {"mercuryorangepurple@gmail.com", "com.google",
+            "mercuryorangepurple@gmail.com"};
+// Submit the query and get a Cursor object back.
+    cursor = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, "DESC LIMIT 100");
+
   // 4. once you get a cursor object, uncomment the code below to see the events displayed in the
   // list view.
 
-//    ListAdapter listAdapter = new SimpleCursorAdapter(
-//        this,
-//        android.R.layout.simple_expandable_list_item_2,
-//        cursor,
-//        new String[] {CalendarContract.Events._ID, CalendarContract.Events.TITLE},
-//        new int[] {android.R.id.text1, android.R.id.text2},
-//        0
-//    );
-//
-//    lv.setAdapter(listAdapter);
+    ListAdapter listAdapter = new SimpleCursorAdapter(
+        this,
+        android.R.layout.simple_expandable_list_item_2,
+        cursor,
+        new String[] {CalendarContract.Events._ID, CalendarContract.Events.TITLE},
+        new int[] {android.R.id.text1, android.R.id.text2},
+        0
+    );
+
+    lv.setAdapter(listAdapter);
   }
 
   public void update() {
