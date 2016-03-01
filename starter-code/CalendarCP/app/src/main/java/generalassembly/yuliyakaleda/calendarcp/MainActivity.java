@@ -148,18 +148,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
     long endMillis = endTime.getTimeInMillis();
 
   // 2. set the limit of 100 events and order DESC
+    String limitAndOrder = CalendarContract.Events.DTSTART + " DESC LIMIT 100";
 
   // 3. get all the events within that period using a cursor object
     Cursor cursor;
     ContentResolver cr = getContentResolver();
-    Uri uri = CalendarContract.Calendars.CONTENT_URI;
-    String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
-            + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?) AND ("
-            + CalendarContract.Calendars.OWNER_ACCOUNT + " = ?))";
-    String[] selectionArgs = new String[] {"mercuryorangepurple@gmail.com", "com.google",
-            "mercuryorangepurple@gmail.com"};
+    Uri uri = CalendarContract.Events.CONTENT_URI;
+    String selection = "((" + CalendarContract.Events.DTSTART + " >= ?) AND ("
+            + CalendarContract.Events.DTEND + " <= ?))";
+    String[] selectionArgs = new String[] {String.valueOf(startMillis), String.valueOf(endMillis)};
 // Submit the query and get a Cursor object back.
-    cursor = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, "DESC LIMIT 100");
+    String[] columns = new String[] {CalendarContract.Events._ID, CalendarContract.Events.TITLE,
+                                     CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND};
+    cursor = cr.query(uri, columns, selection, selectionArgs, limitAndOrder);
 
   // 4. once you get a cursor object, uncomment the code below to see the events displayed in the
   // list view.
