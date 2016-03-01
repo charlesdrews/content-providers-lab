@@ -111,6 +111,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     values.put(CalendarContract.Events.TITLE, title);
     values.put(CalendarContract.Events.DESCRIPTION, description);
     values.put(CalendarContract.Events.CALENDAR_ID, 1);
+    values.put(CalendarContract.Events.EVENT_LOCATION, location);
     values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().toString());
     Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
 
@@ -151,6 +152,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
   public void delete() {
     //TODO: Using the number eventID from the method insertEventInCalendar(), delete the event
     // that was added in that method
+    ContentResolver cr = getContentResolver();
+    ContentValues values = new ContentValues();
+    Uri deleteUri = null;
+    deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, recentlyAddedEventId);
+    int rows = getContentResolver().delete(deleteUri, null, null);
+    Log.i(TAG, "Rows deleted: " + rows);
+    fetchEvents();
   }
 
   @Override
