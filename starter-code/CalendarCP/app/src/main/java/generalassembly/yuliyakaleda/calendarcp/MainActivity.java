@@ -103,11 +103,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
  // 1. get 2 calendar instances: startTime and endTime in milliseconds and set March 1 as the
  // date of the event. The event can last as long as you want, so you can set any time.
     Calendar startTime = Calendar.getInstance();
-    startTime.set(2016, 3, 1, 8, 0, 0);
+    startTime.set(2016, 2, 1, 8, 0, 0);
     long startMillis = startTime.getTimeInMillis();
 
     Calendar endTime = Calendar.getInstance();
-    endTime.set(2016, 3, 1, 9, 0, 0);
+    endTime.set(2016, 2, 1, 9, 0, 0);
     long endMillis = endTime.getTimeInMillis();
 
  // 2. set the following properties of the event and save the event in the provider
@@ -140,11 +140,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
   //TODO:
   // 1. get 2 calendar instances: startTime (Feb 29) and endTime (March 4) in milliseconds
     Calendar startTime = Calendar.getInstance();
-    startTime.set(2016, 2, 29, 12, 0, 0);
+    startTime.set(2016, 1, 29, 12, 0, 0);
     long startMillis = startTime.getTimeInMillis();
 
     Calendar endTime = Calendar.getInstance();
-    endTime.set(2016, 3, 4, 12, 0, 0);
+    endTime.set(2016, 2, 4, 12, 0, 0);
     long endMillis = endTime.getTimeInMillis();
 
   // 2. set the limit of 100 events and order DESC
